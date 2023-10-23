@@ -1,0 +1,21 @@
+{
+  "name": "service-a",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opentelemetry/auto-instrumentations-node": "^0.39.4",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "pino-http": "^8.5.0",
+    "pino-pretty": "^10.2.3"
+  }
+}

@@ -1,0 +1,37 @@
+services:
+  die-roller:
+    build:
+      context: ./service
+    env_file: ./service/die-roller.env
+    environment:
+      - RANDOM_BASE_URL=http://randomizer:8000/random
+      - PORT=8000
+    ports:
+      - 8000:8000
+  randomizer:
+    build:
+      context: ./service
+    env_file: ./service/randomizer.env
+    environment:
+      - PORT=8000
+    expose:
+      - 8000
+  app:
+    build:
+      context: ./app
+    environment:
+      - VITE_ROLL_DIE_BASE_URL=http://localhost:8000/roll-die
+    ports:
+      - 5173:5173
+  collector:
+    image: otel/opentelemetry-collector-contrib
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    expose:
+      - 4317
+  jaeger:
+    image: jaegertracing/all-in-one:1.50
+    expose:
+      - 4317
+    ports:
+      - 16686:16686

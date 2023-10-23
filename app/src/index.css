@@ -1,0 +1,34 @@
+* {
+  box-sizing: content-box;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+}
+
+main {
+  max-width: 50rem;
+  height: 50%;
+  margin: 25% auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & button {
+    background-color: #f44336;
+    border: 0;
+    padding: 16px 64px;
+    cursor: pointer;
+  }
+
+  & button:hover {
+    background-color: #ff8356;
+  }
+
+  & img {
+    margin: 8px;
+  }
+}
