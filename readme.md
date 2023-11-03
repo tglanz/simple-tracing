@@ -2,6 +2,9 @@
 
 Example application to check why context propagation doesn't work.
 
+Backlinks:
+- https://github.com/open-telemetry/opentelemetry-js/issues/4247
+
 ## Architecture
 
 The Web App calls the Die Roller Service which calls the Randomizer Service.
