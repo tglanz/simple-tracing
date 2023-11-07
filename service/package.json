@@ -14,6 +14,7 @@
   "dependencies": {
     "@opentelemetry/api": "^1.6.0",
     "@opentelemetry/auto-instrumentations-node": "^0.39.4",
+    "@opentelemetry/instrumentation": "^0.45.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "pino-http": "^8.5.0",

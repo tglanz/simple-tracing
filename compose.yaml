@@ -4,18 +4,15 @@ services:
       context: ./service
     env_file: ./service/die-roller.env
     environment:
-      - RANDOM_BASE_URL=http://randomizer:8000/random
-      - PORT=8000
+      - RANDOM_BASE_URL=http://randomizer:8001/random
     ports:
       - 8000:8000
   randomizer:
     build:
       context: ./service
     env_file: ./service/randomizer.env
-    environment:
-      - PORT=8000
     expose:
-      - 8000
+      - 8001
   app:
     build:
       context: ./app
@@ -27,6 +24,8 @@ services:
     image: otel/opentelemetry-collector-contrib
     volumes:
       - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+    ports:
+      - 4317:4317
     expose:
       - 4317
   jaeger:
