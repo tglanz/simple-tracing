@@ -3,15 +3,32 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import http from 'http';
 
-const httpGet = (url, headers) => new Promise((resolve, reject) => {
+const useFetch = true;
+
+const httpGet = url => new Promise((resolve, reject) => {
   http.get(url, {
-    headers,
+    headers: {
+      "content-type": "application/json"
+    }
   }, res => {
     res.on('data', data => {
       resolve(JSON.parse(data.toString()));
     });
   })
 });
+
+async function get(url) {
+  if (useFetch) {
+    const response = await fetch(url, {
+      headers: {
+        "content-type": "application/json"
+      }
+    });
+    return await response.json();
+  }
+
+  return await httpGet(url);
+}
 
 const {
   PORT = 8000,
@@ -32,15 +49,14 @@ server.use(cors());
 server.use(loggingMiddleware);
 
 server.use("/roll-die", async (req, res) => {
-  req.log.info("using get");
-  const data = await httpGet(`${RANDOM_BASE_URL}?min=1&max=6`, {
-    headers: {
-      "Content-Type": "application/json",
-    }
-  });
-
-  const die = data.value;
-  res.status(200).send({ die });
+  try {
+    const data = await get(`${RANDOM_BASE_URL}?min=1&max=6`);
+    const die = data.value;
+    res.status(200).send({ die });
+  } catch (err) {
+    req.log.error(err);
+    res.status(500).send({ reason: err.message })
+  }
 });
 
 server.use("/random", async (req, res) => {

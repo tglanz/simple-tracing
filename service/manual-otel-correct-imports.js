@@ -5,26 +5,27 @@
 //     NODE_OPTIONS=--import ./manual-otel.js
 
 import * as api from '@opentelemetry/api';
-import core from '@opentelemetry/core';
-import sdkTraceNode from '@opentelemetry/sdk-trace-node';
-import exporterTraceOtlpGrpc from "@opentelemetry/exporter-trace-otlp-grpc";
-import autoInstrumentationsNode from '@opentelemetry/auto-instrumentations-node';
-import resources from '@opentelemetry/resources';
-import semconv from '@opentelemetry/semantic-conventions';
-import instrumentation from '@opentelemetry/instrumentation';
+import * as core from '@opentelemetry/core';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { Resource } from '@opentelemetry/resources';
+import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { registerInstrumentations } from '@opentelemetry/instrumentation';
 
 if (process.env.ENABLE_DIAG === "true") {
   api.diag.setLogger(new api.DiagConsoleLogger(), { logLevel: api.DiagLogLevel.INFO });
 }
 
-const exporter = new exporterTraceOtlpGrpc.OTLPTraceExporter();
-const provider = new sdkTraceNode.NodeTracerProvider({
-  resource: new resources.Resource({
-    [semconv.SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || "unknown",
+const exporter = new OTLPTraceExporter();
+const provider = new NodeTracerProvider({
+  resource: new Resource({
+    [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || "unknown",
   }),
 });
 
-provider.addSpanProcessor(new sdkTraceNode.SimpleSpanProcessor(exporter));
+provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 
 const propagator = new core.CompositePropagator({
   propagators: [
@@ -40,9 +41,9 @@ provider.register({
   propagator,
 });
 
-instrumentation.registerInstrumentations({
+registerInstrumentations({
   instrumentations: [
-    autoInstrumentationsNode.getNodeAutoInstrumentations({
+    getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-fs": {
         enabled: false,
       }
