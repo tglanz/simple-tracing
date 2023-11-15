@@ -3,7 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import http from 'http';
 
-const useFetch = true;
+const useFetch = false;
 
 const httpGet = url => new Promise((resolve, reject) => {
   http.get(url, {
