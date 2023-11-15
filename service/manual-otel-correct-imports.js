@@ -1,3 +1,9 @@
+// This is an attempt at manual initialization.
+// Context propagation still don't work.
+//
+// To run using this setup, change the .env files such that
+//     NODE_OPTIONS=--import ./manual-otel.js
+
 import * as api from '@opentelemetry/api';
 import core from '@opentelemetry/core';
 import sdkTraceNode from '@opentelemetry/sdk-trace-node';
@@ -7,6 +13,10 @@ import resources from '@opentelemetry/resources';
 import semconv from '@opentelemetry/semantic-conventions';
 import instrumentation from '@opentelemetry/instrumentation';
 
+if (process.env.ENABLE_DIAG === "true") {
+  api.diag.setLogger(new api.DiagConsoleLogger(), { logLevel: api.DiagLogLevel.INFO });
+}
+
 const exporter = new exporterTraceOtlpGrpc.OTLPTraceExporter();
 const provider = new sdkTraceNode.NodeTracerProvider({
   resource: new resources.Resource({
@@ -14,7 +24,7 @@ const provider = new sdkTraceNode.NodeTracerProvider({
   }),
 });
 
-provider.addSpanProcessor(new sdkTraceNode.BatchSpanProcessor(exporter));
+provider.addSpanProcessor(new sdkTraceNode.SimpleSpanProcessor(exporter));
 
 const propagator = new core.CompositePropagator({
   propagators: [

@@ -3,6 +3,7 @@
 from node:19-alpine3.17
 
 ADD ./server.js /app/
+ADD ./manual-otel.js /app/
 ADD ./package.json /app
 ADD ./package-lock.json /app
 

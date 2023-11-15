@@ -2,17 +2,24 @@ services:
   die-roller:
     build:
       context: ./service
-    env_file: ./service/die-roller.env
+    env_file: ./service/base.env
     environment:
+      - PORT=8000
+      - OTEL_SERVICE_NAME=die-roller
       - RANDOM_BASE_URL=http://randomizer:8001/random
     ports:
       - 8000:8000
   randomizer:
     build:
       context: ./service
-    env_file: ./service/randomizer.env
+    env_file: ./service/base.env
+    environment:
+      - PORT=8001
+      - OTEL_SERVICE_NAME=randomizer
     expose:
       - 8001
+    ports:
+      - 8001:8001
   app:
     build:
       context: ./app

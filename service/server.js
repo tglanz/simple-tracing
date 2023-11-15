@@ -1,6 +1,17 @@
 import express from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import http from 'http';
+
+const httpGet = (url, headers) => new Promise((resolve, reject) => {
+  http.get(url, {
+    headers,
+  }, res => {
+    res.on('data', data => {
+      resolve(JSON.parse(data.toString()));
+    });
+  })
+});
 
 const {
   PORT = 8000,
@@ -20,14 +31,15 @@ const loggingMiddleware = pinoHttp({
 server.use(cors());
 server.use(loggingMiddleware);
 
-server.use("/roll-die", async (_req, res) => {
-  const response = await fetch(`${RANDOM_BASE_URL}?min=1&max=6`, {
+server.use("/roll-die", async (req, res) => {
+  req.log.info("using get");
+  const data = await httpGet(`${RANDOM_BASE_URL}?min=1&max=6`, {
     headers: {
       "Content-Type": "application/json",
     }
   });
 
-  const die = (await response.json()).value;
+  const die = data.value;
   res.status(200).send({ die });
 });
 
