@@ -6,7 +6,8 @@ import autoInstrumentationsNode from '@opentelemetry/auto-instrumentations-node'
 import resources from '@opentelemetry/resources';
 import semconv from '@opentelemetry/semantic-conventions';
 import instrumentation from '@opentelemetry/instrumentation';
-import opentelemetryInstrumentationFetchNode from 'opentelemetry-instrumentation-fetch-node';
+// import opentelemetryInstrumentationFetchNode from 'opentelemetry-instrumentation-fetch-node';
+import opentelemetryInstrumentationUndici from 'opentelemetry-instrumentation-undici';
 
 const exporter = new exporterTraceOtlpGrpc.OTLPTraceExporter();
 const provider = new sdkTraceNode.NodeTracerProvider({
@@ -38,7 +39,9 @@ instrumentation.registerInstrumentations({
         enabled: false,
       }
     }),
-    new opentelemetryInstrumentationFetchNode.FetchInstrumentation({
+    // new opentelemetryInstrumentationFetchNode.FetchInstrumentation({
+    // }),
+    new opentelemetryInstrumentationUndici.UndiciInstrumentation({
     }),
   ],
 });

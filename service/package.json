@@ -18,6 +18,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "opentelemetry-instrumentation-fetch-node": "^1.1.2",
+    "opentelemetry-instrumentation-undici": "^0.2.2",
     "pino-http": "^8.5.0",
     "pino-pretty": "^10.2.3"
   }
